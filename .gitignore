@@ -1,6 +1,7 @@
 bin/
 obj/
 packages/
+.vs/
 TestResult.xml
 _ReSharper.*
 *.csproj.user
