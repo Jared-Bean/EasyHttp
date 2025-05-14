@@ -70,7 +70,7 @@ namespace EasyHttp.Http
                                  HttpContentTypes.ApplicationJson);
             _encoder = encoder;
 
-            Timeout = 100000; //http://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.timeout.aspx
+            Timeout = EasyHttpConstants.DefaultRequestTimeoutMs; // Default .NET HttpWebRequest timeout
 
             AllowAutoRedirect = true;
         }
@@ -252,7 +252,7 @@ namespace EasyHttp.Http
 
                 var requestStream = httpWebRequest.GetRequestStream();
 
-                var buffer = new byte[81982];
+                var buffer = new byte[EasyHttpConstants.PutFileBufferSize];
 
                 int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
                 while (bytesRead > 0)

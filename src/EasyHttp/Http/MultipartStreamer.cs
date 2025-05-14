@@ -15,8 +15,8 @@ namespace EasyHttp.Http
 
         public MultiPartStreamer(IDictionary<string, object> multipartFormData, IList<FileData> multipartFileData)
         {
-            _boundaryCode = DateTime.Now.Ticks.GetHashCode() + "548130";
-            _boundary = string.Format("\r\n----------------{0}", _boundaryCode);
+            _boundaryCode = DateTime.Now.Ticks.GetHashCode() + EasyHttpConstants.BoundaryCodeSuffix;
+            _boundary = string.Format("{0}{1}", EasyHttpConstants.BoundaryPrefix, _boundaryCode);
 
             _multipartFormData = multipartFormData;
             _multipartFileData = multipartFileData;
@@ -49,12 +49,12 @@ namespace EasyHttp.Http
                     }
                 }
             }
-            stream.WriteString("--");
+            stream.WriteString(EasyHttpConstants.BoundaryEndMarker);
         }
 
 	    static void StreamFileContents(Stream file, FileData fileData, Stream requestStream)
         {
-            var buffer = new byte[8192];
+            var buffer = new byte[EasyHttpConstants.DefaultStreamBufferSize];
 
             int count;
 
@@ -75,7 +75,8 @@ namespace EasyHttp.Http
 
         public string GetContentType()
         {
-            return string.Format("multipart/form-data; boundary=--------------{0}", _boundaryCode);
+            return string.Format("multipart/form-data; boundary={0}{1}", 
+                EasyHttpConstants.ContentTypeBoundaryPrefix, _boundaryCode);
 
         }
 
@@ -105,24 +106,21 @@ namespace EasyHttp.Http
                 }
             }
 
-				contentLength += ascii.GetBytes("--").Length; // ending -- to the boundary
+			contentLength += ascii.GetBytes(EasyHttpConstants.BoundaryEndMarker).Length; // ending -- to the boundary
 
             return contentLength;
         }
 
         static string CreateFileBoundaryHeader(FileData fileData)
         {
-            return string.Format(
-                "\r\nContent-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" +
-                "Content-Type: {2}\r\n" +
-                "Content-Transfer-Encoding: {3}\r\n\r\n"
-                , fileData.FieldName, Path.GetFileName(fileData.Filename), fileData.ContentType,
+            return string.Format(EasyHttpConstants.FileBoundaryHeaderTemplate,
+                fileData.FieldName, Path.GetFileName(fileData.Filename), fileData.ContentType,
                 fileData.ContentTransferEncoding);
         }
 
         static string CreateFormBoundaryHeader(string name, object value)
         {
-            return string.Format("\r\nContent-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", name, value);
+            return string.Format(EasyHttpConstants.FormBoundaryHeaderTemplate, name, value);
         }
     }
 }

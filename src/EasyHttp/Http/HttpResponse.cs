@@ -63,6 +63,7 @@ using System.Text;
 using EasyHttp.Codecs;
 using EasyHttp.Configuration;
 using EasyHttp.Http.Abstractions;
+using EasyHttp.Infrastructure;
 
 namespace EasyHttp.Http
 {
@@ -156,7 +157,7 @@ namespace EasyHttp.Http
 			        using (var filestream = new FileStream(filename, FileMode.CreateNew))
 			        {
 				        int count;
-				        var buffer = new byte[8192];
+				        var buffer = new byte[EasyHttpConstants.DefaultStreamBufferSize];
 
 				        while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
 				        {
