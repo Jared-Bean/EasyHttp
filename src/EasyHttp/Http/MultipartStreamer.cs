@@ -1,4 +1,18 @@
-// Previous contents remain the same until the constructor
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using EasyHttp.Infrastructure;
+
+namespace EasyHttp.Http
+{
+    public class MultiPartStreamer
+    {
+        readonly String _boundary;
+        readonly String _boundaryCode;
+        readonly IList<FileData> _multipartFileData;
+        readonly IDictionary<string, object> _multipartFormData;
+
         public MultiPartStreamer(IDictionary<string, object> multipartFormData, IList<FileData> multipartFileData)
         {
             _boundaryCode = DateTime.Now.Ticks.GetHashCode() + EasyHttpConstants.BoundaryCodeSuffix;
@@ -8,7 +22,28 @@
             _multipartFileData = multipartFileData;
         }
 
-        // ... other methods remain the same until StreamFileContents
+        public void StreamMultiPart(Stream stream)
+        {
+            stream.WriteString(_boundary);
+			 
+            if (_multipartFormData != null)
+            {
+                foreach (var entry in _multipartFormData)
+                {
+                    stream.WriteString(CreateFormBoundaryHeader(entry.Key, entry.Value));
+                    stream.WriteString(_boundary);
+                }
+            }
+			 
+            if (_multipartFileData != null)
+            {
+                foreach (var fileData in _multipartFileData)
+                {
+                    using (var file = new FileStream(fileData.Filename, FileMode.Open))
+                    {
+                        stream.WriteString(CreateFileBoundaryHeader(fileData));
+
+                        StreamFileContents(file, fileData, stream);
 
                         stream.WriteString(_boundary);
                     }
