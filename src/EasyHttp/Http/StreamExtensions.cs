@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace EasyHttp.Http.Abstractions
 {
@@ -13,7 +13,7 @@ namespace EasyHttp.Http.Abstractions
                 writer.Write(s);
                 writer.Flush();
             }
-            stream.Position = 0;
+            stream.Position = Constants.STREAM_START_POSITION;
             return stream;
         }
     }
