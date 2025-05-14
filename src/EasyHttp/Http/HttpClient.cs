@@ -241,10 +241,10 @@ namespace EasyHttp.Http
 
         bool IsHttpError()
         {
-            var statusCodeClass = (int)Response.StatusCode / EasyHttpConstants.HttpStatusCodeClassDivisor;
+            var statusCodeClass = (int)Response.StatusCode / Constants.HttpStatusCodeClassDivisor;
 
-            return (statusCodeClass == EasyHttpConstants.ClientErrorStatusClass || 
-                    statusCodeClass == EasyHttpConstants.ServerErrorStatusClass);
+            return (statusCodeClass == Constants.ClientErrorStatusClass || 
+                    statusCodeClass == Constants.ServerErrorStatusClass);
         }
 
         public IHttpRequestInterceptionBuilder OnRequest(Func<HttpRequest,bool> requestPredicate = null)

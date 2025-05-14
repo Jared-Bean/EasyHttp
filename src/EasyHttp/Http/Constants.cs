@@ -3,7 +3,7 @@ namespace EasyHttp.Infrastructure
     /// <summary>
     /// Contains constant values used throughout the EasyHttp library
     /// </summary>
-    public static class EasyHttpConstants
+    public static class Constants
     {
         // Buffer sizes for file streaming operations
         /// <summary>

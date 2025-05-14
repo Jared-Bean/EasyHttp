@@ -157,7 +157,7 @@ namespace EasyHttp.Http
 			        using (var filestream = new FileStream(filename, FileMode.CreateNew))
 			        {
 				        int count;
-				        var buffer = new byte[EasyHttpConstants.DefaultStreamBufferSize];
+				        var buffer = new byte[Constants.DefaultStreamBufferSize];
 
 				        while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
 				        {
